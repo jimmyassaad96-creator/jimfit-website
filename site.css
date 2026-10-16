@@ -1,0 +1,9 @@
+/* Additions to the original design (Oct 2026). styles.css is the original, untouched. */
+.tiers{display:grid;gap:10px;margin:27px 0 18px}
+.tier{display:flex;justify-content:space-between;align-items:center;gap:14px;background:#0c1626;border:1px solid #2e415d;border-radius:12px;padding:14px 18px}
+.tier strong{display:block;color:#fff;font-size:16px;font-weight:600}
+.tier div span{display:block;color:#97a8c2;font-size:13px;margin-top:2px}
+.tier .price{margin:0;font-size:34px;white-space:nowrap}
+.tier .price span{font-size:15px}
+.trainer-plan ul{margin-top:22px}
+@media (max-width:700px){.tier{padding:12px 14px}.tier .price{font-size:29px}}
