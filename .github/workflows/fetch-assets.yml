@@ -1,0 +1,38 @@
+name: Copy images from the old site
+# One-time: copies the app screenshots from the old Cloudflare site into this repo,
+# checking each file against its known SHA-256. Safe to re-run; skips files already here.
+on:
+  push:
+    paths: [".github/workflows/fetch-assets.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify
+        run: |
+          set -e
+          while read -r f sum; do
+            [ -f "$f" ] && continue
+            curl -fsSL "https://www.jimfit.app/$f" -o "$f"
+            echo "$sum  $f" | sha256sum -c -
+          done <<EOF
+          favicon.png 6fc9a8b51b8ee7a09cb89208b7d8bd408165ca8ecd51aa9f45dd0ca16ffbfd77
+          jimfit-mark.png e9a6a8427e6803374e8b56ba4657de1724426afefb485738d0f11333b0971080
+          app-log.webp 381ba2d3c8940b7b1467f80a26b35e821f98917bea39d6d63730d1835477a91d
+          app-muscles.webp 19e424eb8da46cb625d2184ae5aa379dc6621a4827052d8a84ac834025c3d275
+          app-records.webp 1c375df1655f2c6131ed7b982a863825890eca5dfdbe067248c416632b4f94c1
+          app-strength.webp 9e86d701a57cbe25fda9f08207b367031c296d77fa4e08c162125ed9ae733554
+          app-voice.webp d7f4a022bb35e9422310bc780ee79d02acfae0ce15b0f7d9a803134b4f6daca0
+          whish-logo.webp 1ec0b5a40ee3b499af9ee5278f46d38201e923de74f75b5cd5e684c3b9c989e9
+          EOF
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A *.png *.webp
+          git diff --cached --quiet || git commit -m "Add images from the old site"
+          git push
